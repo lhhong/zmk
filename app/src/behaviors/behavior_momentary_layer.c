@@ -29,7 +29,10 @@ static int mo_keymap_binding_pressed(struct zmk_behavior_binding *binding,
 static int mo_keymap_binding_released(struct zmk_behavior_binding *binding,
                                       struct zmk_behavior_binding_event event) {
     LOG_DBG("position %d layer %d", event.position, binding->param1);
-    return zmk_keymap_layer_deactivate(binding->param1);
+    if (zmk_keymap_layer_momentary(binding->param1)) {
+        return zmk_keymap_layer_deactivate(binding->param1);
+    }
+    return ZMK_BEHAVIOR_OPAQUE;
 }
 
 static const struct behavior_driver_api behavior_mo_driver_api = {
